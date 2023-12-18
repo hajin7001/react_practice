@@ -6,22 +6,32 @@ const initialGameBoard = [
   [null, null, null]
 ];
 
-export default function GameBoard({onSelectSquare, activePlayerSymbol}){
-  const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
-  const handleSelectSquare = (rowIndex, colIndex) => {
-    setGameBoard((prevGameBoard) => {
-      // copy를 저장하는데 nested array이므로 array안의 array들에 대해서도 copy를 하기 위해 
-      // [...innerArray]를 해주고 있는것
+export default function GameBoard({onSelectSquare, turns}){
 
-      const updatedBoard = [...prevGameBoard.map((innerArray) => (
-        [...innerArray]
-      ))];
-      updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
-      return updatedBoard;
-    });
-    onSelectSquare();
+  let gameBoard = initialGameBoard;
+
+  for(const turn of turns){
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
   }
+  // const [gameBoard, setGameBoard] = useState(initialGameBoard);
+
+  // const handleSelectSquare = (rowIndex, colIndex) => {
+  //   setGameBoard((prevGameBoard) => {
+  //     // copy를 저장하는데 nested array이므로 array안의 array들에 대해서도 copy를 하기 위해 
+  //     // [...innerArray]를 해주고 있는것
+
+  //     const updatedBoard = [...prevGameBoard.map((innerArray) => (
+  //       [...innerArray]
+  //     ))];
+  //     updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
+  //     return updatedBoard;
+  //   });
+  //   onSelectSquare();
+  // }
 
   return(
     <ol id="game-board">
@@ -30,7 +40,7 @@ export default function GameBoard({onSelectSquare, activePlayerSymbol}){
           <ol>
             {row.map((playerSymbol, colIdx) => (
               <li key={colIdx}>
-                <button onClick={() => handleSelectSquare(rowIdx, colIdx)}>{playerSymbol}</button>
+                <button onClick={()=>onSelectSquare(rowIdx, colIdx)}>{playerSymbol}</button>
               </li>
             ))}
           </ol>
